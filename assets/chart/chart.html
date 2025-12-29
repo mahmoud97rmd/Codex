@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <style>
+      html, body, #container { margin: 0; padding: 0; width: 100%; height: 100%; background: #0f1117; }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script>
+      const container = document.getElementById('container');
+      const chart = LightweightCharts.createChart(container, {
+        layout: { background: { color: '#0f1117' }, textColor: 'white' },
+        grid: { vertLines: { color: '#1f2937' }, horzLines: { color: '#1f2937' } },
+        localization: { priceFormatter: price => price.toFixed(2) }
+      });
+      const candleSeries = chart.addCandlestickSeries();
+      const ema50Series = chart.addLineSeries({ color: 'dodgerblue', lineWidth: 2 });
+      const ema150Series = chart.addLineSeries({ color: 'red', lineWidth: 2 });
+      const markers = [];
+
+      function renderSeries(candles, ema50, ema150, trades) {
+        candleSeries.setData(candles);
+        ema50Series.setData(ema50);
+        ema150Series.setData(ema150);
+        const parsedTrades = trades.map(t => ({ time: t.time, position: 'aboveBar', color: t.direction === 'buy' ? 'lime' : 'red', shape: 'arrowDown', text: t.direction.toUpperCase() }));
+        candleSeries.setMarkers(parsedTrades);
+      }
+    </script>
+  </body>
+</html>
