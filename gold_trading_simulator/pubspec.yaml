@@ -1,0 +1,28 @@
+name: gold_trading_simulator
+description: A complete Flutter trading simulator for gold with live charting, strategy, and backtesting.
+publish_to: 'none'
+version: 1.0.0+1
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+  flutter: 
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  http: ^1.1.0
+  webview_flutter: ^4.7.0
+  intl: ^0.18.1
+  collection: ^1.18.0
+  provider: ^6.0.5
+  flutter_hooks: ^0.20.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/chart/chart.html
