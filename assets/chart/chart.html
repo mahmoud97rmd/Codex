@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Lightweight Chart</title>
+  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+  <style>
+    html, body, #container { width: 100%; height: 100%; margin: 0; padding: 0; background: #111; }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const chart = LightweightCharts.createChart(document.getElementById('container'), {
+      layout: { background: { color: '#111' }, textColor: '#DDD' },
+      grid: { vertLines: { color: '#222' }, horzLines: { color: '#222' } },
+      timeScale: { timeVisible: true, secondsVisible: false },
+    });
+    const candleSeries = chart.addCandlestickSeries({ upColor: '#0f0', downColor: '#f00', borderUpColor: '#0f0', borderDownColor: '#f00' });
+    const ema50 = chart.addLineSeries({ color: 'blue', lineWidth: 2 });
+    const ema150 = chart.addLineSeries({ color: 'red', lineWidth: 2 });
+
+    function setSeries(candles, ema50Values, ema150Values) {
+      candleSeries.setData(candles);
+      const times = candles.map(c => c.time);
+      ema50.setData(ema50Values.map((v, i) => ({ time: times[i] || times[times.length - 1], value: v })));
+      ema150.setData(ema150Values.map((v, i) => ({ time: times[i] || times[times.length - 1], value: v })));
+    }
+
+    chart.subscribeCrosshairMove(param => {
+      if (param.time) {
+        const payload = JSON.stringify({ type: 'crosshair', time: param.time });
+        if (window.DartChannel) {
+          window.DartChannel.postMessage(payload);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
